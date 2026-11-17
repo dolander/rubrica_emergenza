@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0b4f7c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rubrica">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<title>Rubrica Emergenze Mugello</title>
+<style>
+  :root {
+    --brand: #0b4f7c;
+    --bg: #eef3f7;
+    --card: #ffffff;
+    --text: #1f2933;
+    --muted: #6b7c8c;
+    --line: #d9e2ec;
+    --call: #1a7f37;
+    --call-text: #ffffff;
+    --warn: #b45309;
+    --warn-bg: #fef3c7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e1a24;
+      --card: #172733;
+      --text: #e6edf3;
+      --muted: #9fb0c0;
+      --line: #27394a;
+      --call: #2ea043;
+      --warn: #fbbf24;
+      --warn-bg: #3b2f0b;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.35;
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+
+  /* intestazione con ricerca */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--brand); color: #fff;
+    padding: calc(10px + env(safe-area-inset-top)) 14px 12px;
+  }
+  header h1 { font-size: 17px; margin: 0 0 8px; font-weight: 700; }
+  .search { position: relative; }
+  .search input {
+    width: 100%; font-size: 16px; /* 16px evita lo zoom automatico su iPhone */
+    padding: 11px 38px 11px 14px; border: 0; border-radius: 12px;
+    background: #fff; color: #1f2933; outline: none;
+    -webkit-appearance: none; appearance: none;
+  }
+  .search button {
+    position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+    width: 36px; height: 36px; border: 0; background: transparent;
+    font-size: 20px; color: #6b7c8c; display: none;
+  }
+  .search.has-text button { display: block; }
+
+  main { padding: 12px 12px 0; max-width: 720px; margin: 0 auto; }
+  .section-title { font-size: 19px; margin: 6px 2px 2px; color: var(--brand); }
+  @media (prefers-color-scheme: dark) { .section-title { color: #8ec5ee; } }
+  .section-note { font-size: 13px; color: var(--muted); margin: 0 2px 10px; }
+  .group-title {
+    font-size: 13px; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--muted); margin: 18px 2px 6px; font-weight: 700;
+  }
+  ul { list-style: none; margin: 0; padding: 0; }
+
+  /* scheda contatto */
+  .row {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 12px; margin-bottom: 10px;
+  }
+  .top { display: flex; align-items: flex-start; gap: 8px; }
+  .info { flex: 1; min-width: 0; }
+  .name { font-size: 17px; font-weight: 700; }
+  .sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .star {
+    flex: none; width: 40px; height: 40px; margin: -6px -6px 0 0;
+    border: 0; background: transparent; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; color: var(--line);
+  }
+  .star svg { width: 26px; height: 26px; fill: currentColor; }
+  .star[aria-pressed="true"] { color: #f5b301; }
+
+  .nums { display: grid; gap: 8px; margin-top: 10px; grid-template-columns: 1fr; }
+  @media (min-width: 420px) { .nums.two { grid-template-columns: 1fr 1fr; } }
+  a.call {
+    display: flex; align-items: center; gap: 10px;
+    min-height: 52px; padding: 8px 14px;
+    background: var(--call); color: var(--call-text);
+    border-radius: 12px; text-decoration: none; font-size: 18px; font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  a.call:active { filter: brightness(.9); transform: scale(.99); }
+  a.call svg { width: 22px; height: 22px; fill: currentColor; flex: none; }
+  a.call .lbl { font-size: 11px; font-weight: 600; opacity: .85; text-transform: uppercase; display: block; line-height: 1; margin-bottom: 2px; }
+  a.call .tag {
+    margin-left: auto; font-size: 11px; font-weight: 700; padding: 3px 7px;
+    border-radius: 8px; background: var(--warn-bg); color: var(--warn);
+  }
+  .nonum { margin-top: 8px; font-size: 14px; color: var(--muted); font-style: italic; }
+
+  /* interni analogici */
+  a.row.ext {
+    display: flex; align-items: center; gap: 14px; padding: 10px 12px 10px 14px;
+    color: inherit; text-decoration: none; min-height: 60px;
+  }
+  a.row.ext:active { filter: brightness(.95); }
+  .extn { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--brand); min-width: 72px; }
+  @media (prefers-color-scheme: dark) { .extn { color: #8ec5ee; } }
+  .extinfo { flex: 1; min-width: 0; }
+  .extinfo .name { display: block; font-size: 16px; font-weight: 600; }
+  .extinfo .sub { display: block; font-variant-numeric: tabular-nums; }
+  .extcall {
+    flex: none; width: 44px; height: 44px; border-radius: 50%;
+    background: var(--call); color: var(--call-text);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .extcall svg { width: 22px; height: 22px; fill: currentColor; }
+
+  .empty { text-align: center; color: var(--muted); padding: 40px 12px; }
+
+  /* barra di navigazione in basso */
+  nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    background: var(--card); border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  nav button {
+    border: 0; background: transparent; color: var(--muted);
+    padding: 8px 2px 8px; font-size: 11px; font-weight: 600; font-family: inherit;
+    display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 58px;
+  }
+  nav button .ic { font-size: 22px; line-height: 1.1; }
+  nav button[aria-selected="true"] { color: var(--brand); }
+  @media (prefers-color-scheme: dark) { nav button[aria-selected="true"] { color: #8ec5ee; } }
+
+  /* avviso installazione */
+  #install {
+    display: none; margin: 0 0 12px; padding: 10px 12px; border-radius: 12px;
+    background: var(--card); border: 1px solid var(--line); font-size: 14px;
+    align-items: center; gap: 10px;
+  }
+  #install.show { display: flex; }
+  #install span { flex: 1; }
+  #install button {
+    border: 0; border-radius: 10px; padding: 8px 12px; font-size: 14px; font-weight: 700;
+    background: var(--brand); color: #fff; font-family: inherit;
+  }
+  #install button.ghost { background: transparent; color: var(--muted); font-size: 18px; padding: 4px 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Rubrica Emergenze Mugello</h1>
+  <div class="search" id="searchBox">
+    <input id="q" type="search" inputmode="search" placeholder="Cerca reparto, presidio o numero" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Cerca">
+    <button id="clear" type="button" aria-label="Cancella ricerca">&times;</button>
+  </div>
+</header>
+
+<main>
+  <div id="install"></div>
+  <div id="view"></div>
+</main>
+
+<nav id="nav" role="tablist" aria-label="Sezioni"></nav>
+
+<script>
+/* ================================================================
+   DATI  (qui si modificano numeri e reparti)
+   - n: numero come si legge (con spazi); il link di chiamata si
+     costruisce da solo aggiungendo +39
+   - chk: true  => mostra l'etichetta "da verificare" sul pulsante
+   ================================================================ */
+const DATA = {
+  emergenza: [
+    { name: "Sala operatoria",        nums: [{ n: "334 1175640", l: "Cell." }] },
+    { name: "Sala Parto",             nums: [] },
+    { name: "Chirurgia",              nums: [{ n: "334 1177075", l: "Cell." }] },
+    { name: "Cardiologia",            nums: [{ n: "338 2029347", l: "Cell." }] },
+    { name: "Area Materno-Infantile", nums: [{ n: "338 2029510", l: "Cell." }] },
+    { name: "Medicina A",             nums: [{ n: "334 1177819", l: "Cell." }] },
+    { name: "Medicina B",             nums: [{ n: "338 2029715", l: "Cell." }] },
+    { name: "Dialisi",                nums: [{ n: "338 2029129", l: "Cell." }] },
+    { name: "DHO/Day Service",        nums: [{ n: "338 2029030", l: "Cell." }] },
+    { name: "Pronto Soccorso",        nums: [{ n: "334 1177058", l: "Cell." }] },
+    { name: "RTI",                    nums: [{ n: "331 2354297", l: "Cell." }] },
+    { name: "Radiologia",             nums: [{ n: "338 2028487", l: "Cell." }] },
+    { name: "SPDC/Endoscopia",        nums: [{ n: "338 2030038", l: "Cell." }] },
+    { name: "Ambulatori/Centro Sangue", nums: [{ n: "331 2354661", l: "Cell." }] },
+    { name: "Portineria",             nums: [{ n: "366 6358353", l: "Cell." }] },
+    { name: "Visual Hospital",        nums: [{ n: "334 1175842", l: "Cell." }] },
+    { name: "House Keeper",           nums: [{ n: "335 317435",  l: "Cell." }] }
+  ],
+  interni: [
+    { ext: "51200", name: "Sala Parto" },
+    { ext: "51208", name: "Mono Emat. Trasf." },
+    { ext: "51230", name: "Chirurgia Sez. A" },
+    { ext: "51237", name: "Medicina B" },
+    { ext: "51240", name: "Day Service" },
+    { ext: "51244", name: "Segr. Oncologica" },
+    { ext: "51250", name: "Medicina A" },
+    { ext: "51259", name: "Inferm. Psichiatrica" },
+    { ext: "51264", name: "Portineria" },
+    { ext: "51280", name: "Accogl. Cardiologica" },
+    { ext: "51281", name: "Bancone Farmacia" },
+    { ext: "51297", name: "Resp. Lab. Analisi" },
+    { ext: "51305", name: "Pronto Soccorso" },
+    { ext: "51307", name: "Fax Rianim." },
+    { ext: "51313", name: "Antincendio" },
+    { ext: "51327", name: "Sala Operatoria" },
+    { ext: "51331", name: "Covid DEA" },
+    { ext: "51341", name: "Emergenza 2222" },
+    { ext: "51350", name: "Triage Pron. Soccor." },
+    { ext: "51389", name: "Amb. Preosp. 1" }
+  ],
+  presidi: [
+    { name: "Presidio Barberino",   addr: "Via 1° Maggio, 26",
+      nums: [{ n: "055 6939486", l: "Fisso" }, { n: "055 6939487", l: "Fisso" }, { n: "329 6507724", l: "Cell." }] },
+    { name: "Presidio di Borgo",    addr: "Viale della Resistenza, angolo Via Gobetti, 17/19",
+      nums: [{ n: "055 8451531", l: "Fisso" }, { n: "329 6507721", l: "Cell." }] },
+    { name: "Presidio di Dicomano", addr: "Piazza della Repubblica, 1",
+      nums: [{ n: "055 6939345", l: "Fisso" }, { n: "055 6939346", l: "Fisso" }, { n: "329 6507725", l: "Cell." }] },
+    { name: "Presidio di Firenzuola", addr: "Via Riobarondoli, 16",
+      nums: [{ n: "055 6939981", l: "Fisso" }, { n: "329 6507723", l: "Cell." }] },
+    { name: "Presidio di Marradi",  addr: "Via D. Campana, 12/A",
+      nums: [{ n: "055 6939423", l: "Fisso" }, { n: "329 6507722", l: "Cell." }] },
+    { name: "Presidio di Palazzuolo", addr: "Via dell'Abete, 2",
+      nums: [{ n: "055 6930895", l: "Fisso" }, { n: "329 6507660", l: "Cell." }] },
+    { name: "Presidio di Scarperia", addr: "Via Lippi, 3/A",
+      nums: [{ n: "055 6939171", l: "Fisso" }, { n: "055 6939172", l: "Fisso" }, { n: "329 6507720", l: "Cell." }] },
+    { name: "Presidio di San Piero", addr: "Via dei Giardini, 6",
+      nums: [{ n: "055 6930445", l: "Fisso" } /* cellulare 320 7982557: da verificare, rimesso quando confermato */] },
+    { name: "Presidio di Vicchio",  addr: "Largo Don E. Corsinovi, 1",
+      nums: [{ n: "055 6939500", l: "Fisso" } /* cellulare 320 1315116: da verificare, rimesso quando confermato */] },
+    { name: "Presidio di Londa",    addr: "Via Falcone, 9",
+      nums: [{ n: "055 8351556", l: "Fisso" }] },
+    { name: "Presidio San Godenzo", addr: "Piazza del Municipio, 1",
+      nums: [{ n: "055 8374197", l: "Fisso" }] },
+    { name: "Villa Ersilia",        addr: "",
+      nums: [{ n: "320 4374583", l: "Cell." }] }
+  ]
+};
+
+/* ---------- sezioni (l'ordine qui è l'ordine della barra in basso) ---------- */
+const TABS = [
+  { id: "emergenza",  label: "Emergenza",  icon: "🚨", title: "Emergenza tecnica ospedale Mugello", note: "Telefoni cellulari" },
+  { id: "interni",    label: "Interni",    icon: "☎️", title: "Telefoni analogici funzionanti in caso di guasto della rete", note: "Tocca un interno per chiamarlo: il telefono compone 055 845 più le ultime 4 cifre (es. 51389 = 055 8451389)." },
+  { id: "presidi",    label: "Presidi",    icon: "🏥", title: "Presidi Mugello", note: "Tocca un numero per chiamare." },
+  { id: "preferiti",  label: "Preferiti",  icon: "⭐", title: "Preferiti", note: "I contatti che hai segnato con la stella." }
+];
+
+/* ---------- utilità ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const telHref = (n) => "tel:+39" + n.replace(/\s+/g, "");
+const digits = (s) => s.replace(/\D/g, "");
+const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+const ICON_PHONE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>';
+const ICON_STAR  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
+
+/* ---------- modello: tutte le voci con un id stabile ---------- */
+const ITEMS = [];
+DATA.emergenza.forEach((x, i) => ITEMS.push({ id: "e" + i, sec: "emergenza", name: x.name, sub: "", nums: x.nums }));
+DATA.presidi.forEach((x, i)   => ITEMS.push({ id: "p" + i, sec: "presidi",   name: x.name, sub: x.addr, nums: x.nums }));
+/* Gli interni si chiamano dall'esterno con il prefisso fisso 055 845 + le ultime 4 cifre
+   (es. 51389 -> 055 8451389). Se il prefisso cambia, modificalo qui. */
+const INTERNI_PREFIX = "055845";
+DATA.interni.forEach((x, i) => {
+  const full = INTERNI_PREFIX + x.ext.slice(1);                 // 0558451389
+  const shown = full.slice(0, 3) + " " + full.slice(3);         // 055 8451389
+  ITEMS.push({ id: "i" + i, sec: "interni", name: x.name, ext: x.ext, nums: [{ n: shown, l: "Fisso" }] });
+});
+
+let favs = new Set(store.get("favs", []));
+let tab = store.get("tab", "emergenza");
+if (!TABS.some((t) => t.id === tab)) tab = "emergenza";
+
+/* ---------- disegno ---------- */
+function rowHTML(it, showSection) {
+  if (it.ext) {
+    const x = it.nums[0];
+    return `<li><a class="row ext" href="${telHref(x.n)}" aria-label="Chiama ${esc(it.name)} ${esc(x.n)}">` +
+      `<span class="extn">${esc(it.ext)}</span>` +
+      `<span class="extinfo"><span class="name">${esc(it.name)}</span><span class="sub">${esc(x.n)}</span></span>` +
+      `<span class="extcall">${ICON_PHONE}</span></a></li>`;
+  }
+  const secLabel = showSection ? TABS.find((t) => t.id === it.sec).label : "";
+  const sub = [it.sub, secLabel].filter(Boolean).join(" · ");
+  const on = favs.has(it.id);
+  const nums = it.nums.map((x) =>
+    `<a class="call" href="${telHref(x.n)}" aria-label="Chiama ${esc(it.name)} ${esc(x.n)}">${ICON_PHONE}` +
+    `<span><span class="lbl">${esc(x.l)}</span>${esc(x.n)}</span>` +
+    (x.chk ? `<span class="tag">da verificare</span>` : "") + `</a>`
+  ).join("");
+  return `<li class="row">
+    <div class="top">
+      <div class="info"><div class="name">${esc(it.name)}</div>${sub ? `<div class="sub">${esc(sub)}</div>` : ""}</div>
+      <button class="star" type="button" data-id="${it.id}" aria-pressed="${on}" aria-label="${on ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}">${ICON_STAR}</button>
+    </div>
+    ${it.nums.length ? `<div class="nums ${it.nums.length > 1 ? "two" : ""}">${nums}</div>` : `<div class="nonum">Numero non disponibile</div>`}
+  </li>`;
+}
+
+function matches(it, q) {
+  const nq = norm(q), dq = digits(q);
+  if (norm(it.name).includes(nq) || (it.sub && norm(it.sub).includes(nq)) || (it.ext && it.ext.includes(q.trim()))) return true;
+  if (dq.length >= 2) {
+    if (it.ext && it.ext.includes(dq)) return true;
+    return it.nums.some((x) => digits(x.n).includes(dq));
+  }
+  return false;
+}
+
+function render() {
+  const view = document.getElementById("view");
+  const q = document.getElementById("q").value.trim();
+  document.getElementById("searchBox").classList.toggle("has-text", q.length > 0);
+  let html = "";
+
+  if (q) {
+    // la ricerca guarda in tutte le sezioni
+    let found = 0;
+    TABS.filter((t) => t.id !== "preferiti").forEach((t) => {
+      const list = ITEMS.filter((it) => it.sec === t.id && matches(it, q));
+      if (list.length) {
+        found += list.length;
+        html += `<div class="group-title">${esc(t.label)}</div><ul>${list.map((it) => rowHTML(it, false)).join("")}</ul>`;
+      }
+    });
+    if (!found) html = `<div class="empty">Nessun risultato per “${esc(q)}”.</div>`;
+  } else {
+    const t = TABS.find((x) => x.id === tab);
+    html += `<h2 class="section-title">${esc(t.title)}</h2><p class="section-note">${esc(t.note)}</p>`;
+    let list;
+    if (tab === "preferiti") {
+      list = ITEMS.filter((it) => !it.ext && favs.has(it.id));
+      if (!list.length) html += `<div class="empty">Nessun preferito.<br>Tocca la stella su un contatto per aggiungerlo qui.</div>`;
+    } else {
+      list = ITEMS.filter((it) => it.sec === tab);
+    }
+    if (list.length) html += `<ul>${list.map((it) => rowHTML(it, tab === "preferiti")).join("")}</ul>`;
+  }
+  view.innerHTML = html;
+}
+
+function renderNav() {
+  const nav = document.getElementById("nav");
+  nav.innerHTML = TABS.map((t) =>
+    `<button type="button" role="tab" data-tab="${t.id}" aria-selected="${t.id === tab}"><span class="ic">${t.icon}</span>${esc(t.label)}</button>`
+  ).join("");
+}
+
+/* ---------- eventi ---------- */
+document.getElementById("nav").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-tab]");
+  if (!b) return;
+  tab = b.dataset.tab;
+  store.set("tab", tab);
+  document.getElementById("q").value = "";
+  renderNav(); render();
+  window.scrollTo(0, 0);
+});
+
+document.getElementById("view").addEventListener("click", (e) => {
+  const s = e.target.closest("button.star");
+  if (!s) return;
+  const id = s.dataset.id;
+  favs.has(id) ? favs.delete(id) : favs.add(id);
+  store.set("favs", Array.from(favs));
+  const y = window.scrollY;
+  render();
+  window.scrollTo(0, y);
+});
+
+const qEl = document.getElementById("q");
+qEl.addEventListener("input", () => { render(); window.scrollTo(0, 0); });
+document.getElementById("clear").addEventListener("click", () => { qEl.value = ""; render(); qEl.focus(); });
+
+/* ---------- installazione come app ---------- */
+(function () {
+  const box = document.getElementById("install");
+  const standalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  if (standalone || store.get("installDismissed", false)) return;
+  const dismiss = '<button class="ghost" type="button" id="instClose" aria-label="Chiudi">&times;</button>';
+  const close = () => { box.classList.remove("show"); store.set("installDismissed", true); };
+  let deferred = null;
+
+  if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+    box.innerHTML = `<span>Per installare l'app: tocca <b>Condividi</b> e poi <b>Aggiungi alla schermata Home</b>.</span>${dismiss}`;
+    box.classList.add("show");
+    document.getElementById("instClose").onclick = close;
+  }
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault(); deferred = e;
+    box.innerHTML = `<span>Installa la rubrica sul telefono: funziona anche senza rete.</span><button type="button" id="instGo">Installa</button>${dismiss}`;
+    box.classList.add("show");
+    document.getElementById("instGo").onclick = () => { deferred.prompt(); deferred = null; box.classList.remove("show"); };
+    document.getElementById("instClose").onclick = close;
+  });
+})();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
+
+renderNav();
+render();
+</script>
+</body>
+</html>
