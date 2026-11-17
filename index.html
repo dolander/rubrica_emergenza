@@ -7,13 +7,13 @@
 <meta name="theme-color" content="#0b4f7c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Rubrica">
+<meta name="apple-mobile-web-app-title" content="Emergenza">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<title>Rubrica Emergenze Mugello</title>
+<title>Numeri Emergenza Mugello</title>
 <style>
   :root {
     --brand: #0b4f7c;
@@ -176,7 +176,7 @@
 <body>
 
 <header>
-  <h1>Rubrica Emergenze Mugello</h1>
+  <h1>Numeri Emergenza Mugello</h1>
   <div class="search" id="searchBox">
     <input id="q" type="search" inputmode="search" placeholder="Cerca reparto, presidio o numero" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Cerca">
     <button id="clear" type="button" aria-label="Cancella ricerca">&times;</button>
@@ -425,7 +425,7 @@ document.getElementById("clear").addEventListener("click", () => { qEl.value = "
   }
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault(); deferred = e;
-    box.innerHTML = `<span>Installa la rubrica sul telefono: funziona anche senza rete.</span><button type="button" id="instGo">Installa</button>${dismiss}`;
+    box.innerHTML = `<span>Installa l'app sul telefono: funziona anche senza rete.</span><button type="button" id="instGo">Installa</button>${dismiss}`;
     box.classList.add("show");
     document.getElementById("instGo").onclick = () => { deferred.prompt(); deferred = null; box.classList.remove("show"); };
     document.getElementById("instClose").onclick = close;
@@ -434,10 +434,10 @@ document.getElementById("clear").addEventListener("click", () => { qEl.value = "
 })();
 
 /* ---------- versione e credits ---------- */
-const APP_VERSION = "1.1";
+const APP_VERSION = "1.3";
 const APP_DATE = "17 novembre 2026";
 document.getElementById("credits").innerHTML =
-  `<div><strong>Rubrica Emergenze Mugello</strong> · versione ${esc(APP_VERSION)} · ${esc(APP_DATE)}</div>` +
+  `<div><strong>Numeri Emergenza Mugello</strong> · versione ${esc(APP_VERSION)} · ${esc(APP_DATE)}</div>` +
   `<div>Ideata e sviluppata da <strong>Enrico Dolabelli</strong></div>` +
   `<div>Infermiere, incarico di funzione Formazione, Informatizzazione e Innovazione<br>Direzione Infermieristica Zona Mugello · USL Toscana Centro</div>` +
   `<div>Strumento di consultazione: in caso di dubbio verificare i numeri con le fonti ufficiali aziendali.</div>`;
