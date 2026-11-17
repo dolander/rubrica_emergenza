@@ -5,13 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0b4f7c">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Rubrica">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="format-detection" content="telephone=no">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
 <title>Rubrica Emergenze Mugello</title>
 <style>
@@ -151,19 +145,12 @@
   nav button[aria-selected="true"] { color: var(--brand); }
   @media (prefers-color-scheme: dark) { nav button[aria-selected="true"] { color: #8ec5ee; } }
 
-  /* avviso installazione */
-  #install {
-    display: none; margin: 0 0 12px; padding: 10px 12px; border-radius: 12px;
-    background: var(--card); border: 1px solid var(--line); font-size: 14px;
-    align-items: center; gap: 10px;
+  /* credits */
+  footer#credits {
+    margin: 22px 0 8px; padding: 14px 8px 4px; border-top: 1px solid var(--line);
+    text-align: center; font-size: 12px; line-height: 1.5; color: var(--muted);
   }
-  #install.show { display: flex; }
-  #install span { flex: 1; }
-  #install button {
-    border: 0; border-radius: 10px; padding: 8px 12px; font-size: 14px; font-weight: 700;
-    background: var(--brand); color: #fff; font-family: inherit;
-  }
-  #install button.ghost { background: transparent; color: var(--muted); font-size: 18px; padding: 4px 8px; }
+  footer#credits strong { color: var(--text); }
 </style>
 </head>
 <body>
@@ -177,8 +164,8 @@
 </header>
 
 <main>
-  <div id="install"></div>
   <div id="view"></div>
+  <footer id="credits"></footer>
 </main>
 
 <nav id="nav" role="tablist" aria-label="Sezioni"></nav>
@@ -399,28 +386,14 @@ const qEl = document.getElementById("q");
 qEl.addEventListener("input", () => { render(); window.scrollTo(0, 0); });
 document.getElementById("clear").addEventListener("click", () => { qEl.value = ""; render(); qEl.focus(); });
 
-/* ---------- installazione come app ---------- */
-(function () {
-  const box = document.getElementById("install");
-  const standalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
-  if (standalone || store.get("installDismissed", false)) return;
-  const dismiss = '<button class="ghost" type="button" id="instClose" aria-label="Chiudi">&times;</button>';
-  const close = () => { box.classList.remove("show"); store.set("installDismissed", true); };
-  let deferred = null;
-
-  if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
-    box.innerHTML = `<span>Per installare l'app: tocca <b>Condividi</b> e poi <b>Aggiungi alla schermata Home</b>.</span>${dismiss}`;
-    box.classList.add("show");
-    document.getElementById("instClose").onclick = close;
-  }
-  window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault(); deferred = e;
-    box.innerHTML = `<span>Installa la rubrica sul telefono: funziona anche senza rete.</span><button type="button" id="instGo">Installa</button>${dismiss}`;
-    box.classList.add("show");
-    document.getElementById("instGo").onclick = () => { deferred.prompt(); deferred = null; box.classList.remove("show"); };
-    document.getElementById("instClose").onclick = close;
-  });
-})();
+/* ---------- versione e credits ---------- */
+const APP_VERSION = "1.0";
+const APP_DATE = "17 novembre 2026";
+document.getElementById("credits").innerHTML =
+  `<div><strong>Rubrica Emergenze Mugello</strong> · versione ${esc(APP_VERSION)} · ${esc(APP_DATE)}</div>` +
+  `<div>Ideata e sviluppata da <strong>Enrico Dolabelli</strong></div>` +
+  `<div>Infermiere, incarico di funzione Formazione, Informatizzazione e Innovazione<br>Direzione Infermieristica Zona Mugello · USL Toscana Centro</div>` +
+  `<div>Strumento di consultazione: in caso di dubbio verificare i numeri con le fonti ufficiali aziendali.</div>`;
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));

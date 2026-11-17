@@ -1,14 +1,11 @@
 // Service worker: rete prima (così i dati aggiornati arrivano subito),
 // cache come riserva quando la rete manca o è troppo lenta.
 // Per forzare l'aggiornamento di tutti i telefoni, cambia il numero di versione.
-const CACHE = 'rubrica-mugello-v2';
+const CACHE = 'rubrica-mugello-v3';
 const FILES = [
   './',
   './index.html',
-  './manifest.webmanifest',
-  './icon-180.png',
-  './icon-192.png',
-  './icon-512.png'
+  './icon-192.png'
 ];
 
 self.addEventListener('install', (event) => {
