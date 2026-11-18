@@ -441,12 +441,13 @@ document.getElementById("clear").addEventListener("click", () => { qEl.value = "
 })();
 
 /* ---------- versione e credits ---------- */
-const APP_VERSION = "1.5";
+const APP_VERSION = "1.6";
 const APP_DATE = "18 novembre 2026";
 document.getElementById("credits").innerHTML =
   `<div><strong>Numeri Emergenza Mugello</strong> · versione ${esc(APP_VERSION)} · ${esc(APP_DATE)}</div>` +
   `<div>Ideata e sviluppata da <strong>Enrico Dolabelli</strong></div>` +
-  `<div>Strumento di consultazione non ufficiale: in caso di dubbio verificare i numeri con le fonti attendibili.</div>`;
+  `<div>Strumento di consultazione non ufficiale: in caso di dubbio verificare i numeri con le fonti attendibili.</div>` +
+  `<div>Segnalare all'ideatore eventuali modifiche o errori nei numeri.</div>`;
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
