@@ -200,7 +200,7 @@
    ================================================================ */
 const DATA = {
   emergenza: [
-    { name: "Sala operatoria",        nums: [{ n: "334 1175640", l: "Cell." }] },
+    { name: "Sala Operatoria",        nums: [{ n: "334 1175640", l: "Cell." }] },
     { name: "Sala Parto",             nums: [] },
     { name: "Chirurgia",              nums: [{ n: "334 1177075", l: "Cell." }] },
     { name: "Cardiologia",            nums: [{ n: "338 2029347", l: "Cell." }] },
@@ -270,7 +270,7 @@ const DATA = {
 
 /* ---------- sezioni (l'ordine qui è l'ordine della barra in basso) ---------- */
 const TABS = [
-  { id: "emergenza",  label: "Emergenza",  icon: "🚨", title: "Emergenza tecnica ospedale Mugello", note: "Telefoni cellulari" },
+  { id: "emergenza",  label: "Emergenza",  icon: "🚨", title: "Emergenza tecnologica", note: "Numeri da usare in caso di guasto alla linea telefonica" },
   { id: "interni",    label: "Interni",    icon: "☎️", title: "Telefoni analogici funzionanti in caso di guasto della rete", note: "Tocca un interno per chiamarlo: il telefono compone 055 845 più le ultime 4 cifre (es. 51389 = 055 8451389)." },
   { id: "presidi",    label: "Presidi",    icon: "🏥", title: "Presidi Mugello", note: "Tocca un numero per chiamare." },
   { id: "preferiti",  label: "Preferiti",  icon: "⭐", title: "Preferiti", note: "I contatti che hai segnato con la stella." }
@@ -301,6 +301,13 @@ DATA.interni.forEach((x, i) => {
   const shown = full.slice(0, 3) + " " + full.slice(3);         // 055 8451389
   ITEMS.push({ id: "i" + i, sec: "interni", name: x.name, ext: x.ext, nums: [{ n: shown, l: "Fisso" }] });
 });
+
+/* Ordine alfabetico (italiano) in ogni sezione. Gli id sopra restano legati alla posizione
+   nell'elenco DATA, così i Preferiti già salvati sui telefoni non cambiano contatto.
+   => i contatti NUOVI vanno aggiunti in fondo all'elenco della loro sezione in DATA.
+   Per i presidi si ordina sul nome del luogo, senza "Presidio di / Presidio". */
+const sortKey = (it) => (it.sec === "presidi" ? it.name.replace(/^Presidio( di)?\s+/i, "") : it.name);
+ITEMS.sort((a, b) => sortKey(a).localeCompare(sortKey(b), "it", { sensitivity: "base", numeric: true }));
 
 let favs = new Set(store.get("favs", []));
 let tab = store.get("tab", "emergenza");
@@ -434,13 +441,12 @@ document.getElementById("clear").addEventListener("click", () => { qEl.value = "
 })();
 
 /* ---------- versione e credits ---------- */
-const APP_VERSION = "1.3";
-const APP_DATE = "17 novembre 2026";
+const APP_VERSION = "1.5";
+const APP_DATE = "18 novembre 2026";
 document.getElementById("credits").innerHTML =
   `<div><strong>Numeri Emergenza Mugello</strong> · versione ${esc(APP_VERSION)} · ${esc(APP_DATE)}</div>` +
   `<div>Ideata e sviluppata da <strong>Enrico Dolabelli</strong></div>` +
-  `<div>Infermiere, incarico di funzione Formazione, Informatizzazione e Innovazione<br>Direzione Infermieristica Zona Mugello · USL Toscana Centro</div>` +
-  `<div>Strumento di consultazione: in caso di dubbio verificare i numeri con le fonti ufficiali aziendali.</div>`;
+  `<div>Strumento di consultazione non ufficiale: in caso di dubbio verificare i numeri con le fonti attendibili.</div>`;
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
